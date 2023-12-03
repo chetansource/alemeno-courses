@@ -3,14 +3,17 @@ import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getImages } from "./routes/fetchrequests";
+import { getImages,getCourseName } from "./routes/fetchrequests";
 
 export default function Home() {
   const [images, setImages] = useState([]);
+  const [name,setName] = useState([])
 
   async function fetchData() {
     const images = await getImages();
+    const courseName = await getCourseName()
     setImages(images);
+    setName(courseName)
   }
 
   useEffect(() => {
@@ -27,7 +30,7 @@ export default function Home() {
               key={index}
               className="bg-white rounded-lg shadow-md overflow-hidden"
             >
-              <Link href="">
+              <Link href={`/courseinfo/${index + 1}`}>
                 <img
                   src={imageUrl}
                   alt={`Course ${index + 1}`}
@@ -35,7 +38,9 @@ export default function Home() {
                 />
               </Link>
               <div className="p-4 font-black">
-                <h2 className="text-xl">course name</h2>
+                {name && name.map((cname, index) => (
+                <h2 key={index}className="text-xl">{cname.value}</h2>
+                ))}
                 <div className="text-lg text-gray-700">Teacher</div>
                 <div className="flex items-center mt-2">
                   <div className="text-yellow-700 text-lg mr-2">
